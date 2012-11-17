@@ -3,6 +3,9 @@
 
 #include <vector>
 #include <string>
+#include <iostream>
+
+using std::cout;
 using std::vector;
 using std::string;
 
@@ -18,6 +21,14 @@ class XmlElement
 
 		string Contents();
 		void setContents(string contents);
+
+		string ToString();
+		void Print(int tabs);
+
+		XmlElement *getParent();
+
+		void addChild(XmlElement *child);
+		void Remove();
 	private:
 		string _name;
 		string _contents;
