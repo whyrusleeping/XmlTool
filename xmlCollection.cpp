@@ -12,17 +12,14 @@ XmlCollection::XmlCollection(vector<XmlElement*> lis)
 		_elems.push_back(lis[i]);
 	}
 	_iter = _elems.begin();
-	_index = 0;
 }
 
 XmlElement *XmlCollection::operator[](const int i)
 {
 	if(i >= _elems.size())
 		return NULL;
-	if(i > _index)
-		for(;_index < i;_index++, _iter++);
-	else
-		for(;_index > i;_index--, _iter--);
+	int ind = 0;
+	for(_iter = _elems.begin(); _iter != _elems.end() && ind < i; _iter++, ind++);		
 	return *_iter;
 }
 

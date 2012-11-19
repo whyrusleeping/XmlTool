@@ -25,8 +25,8 @@ class XmlCollection
 		XmlCollection ChildrenOfName(string name);
 	private:
 		void _combine(XmlCollection ncol);
+
 		list<XmlElement*>::iterator _iter;
-		int _index;
 		list<XmlElement*> _elems;
 };
 
