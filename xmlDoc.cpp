@@ -2,6 +2,7 @@
 
 XmlDocument::XmlDocument()
 {
+	_filename = "untitled.xml";
 	root = NULL;
 }
 
@@ -9,6 +10,11 @@ XmlDocument::XmlDocument(string filename)
 {
 	root = NULL;
 	Load(filename);
+}
+
+XmlDocument::~XmlDocument()
+{
+	delete root;
 }
 
 void XmlDocument::Load(string filename)
@@ -89,3 +95,15 @@ void XmlDocument::print()
 {
 	this->root->Print(0);
 }
+
+void XmlDocument::Save()
+{
+	Save(_filename);
+}
+
+void XmlDocument::Save(string filename)
+{
+	ofstream of(filename.c_str());
+	root->_save(of, 0);
+}
+

@@ -12,6 +12,14 @@ XmlElement::XmlElement(string name, string contents)
 	parent = NULL;
 }
 
+XmlElement::~XmlElement()
+{
+	for(int i = 0; i < children.size(); i++)
+	{
+		delete children[i];
+	}
+}
+
 int XmlElement::Depth()
 {
 	if(parent == NULL)
@@ -73,4 +81,73 @@ void XmlElement::Print(int tabs)
 XmlElement *XmlElement::getParent()
 {
 	return parent;
+}
+
+void XmlElement::_save(ofstream &of, int tabs)
+{
+
+	for(int i = 0; i < tabs; i++)
+		of << "\t";
+	of << "<" << _name << ">\n";
+
+	if(_contents != "")
+	{
+		for(int i = 0; i < tabs+1; i++)
+			of << "\t";
+		of << _contents << "\n";
+	}
+	for(int i = 0; i < children.size(); i++)
+		children[i]->_save(of, tabs + 1);
+	for(int i = 0; i < tabs; i++)
+		of << "\t";
+	of << "</" << _name << ">\n";
+
+
+}
+
+//Unlinks this element from its parent, does not delete it
+void XmlElement::Remove()
+{
+	if(parent != NULL)
+	{
+		for(int i = 0; i < parent->children.size(); i++)
+		{
+			if(parent->children[i] == this)
+			{
+				parent->children.erase(parent->children.begin() + i);
+				break;
+			}
+		}
+		parent = NULL;
+	}
+}
+
+XmlElement *XmlElement::Element(string name)
+{
+	for(int i = 0; i < children.size(); i++)
+	{
+		if(children[i]->_name == name)
+			return children[i];
+	}
+}
+
+//Returns all child elements of all elements in this collection
+XmlCollection XmlElement::Children()
+{
+	XmlCollection col(children);
+	return col;
+}
+
+XmlCollection XmlElement::ChildrenOfName(string name)
+{
+	vector<XmlElement*> set;
+	for(int i = 0; i < children.size(); i++)
+	{
+		if(children[i]->_name == name)
+		{
+			set.push_back(children[i]);
+		}
+	}
+	XmlCollection col(set);
+	return col;
 }
