@@ -24,6 +24,7 @@ class XmlElement
 		friend XmlDocument;
 		XmlElement();
 		XmlElement(string name, string contents="");
+		XmlElement(const XmlElement *e);
 		~XmlElement();
 
 

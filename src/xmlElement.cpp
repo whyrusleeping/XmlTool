@@ -1,23 +1,32 @@
 #include "xmlElement.h"
 
-XmlElement::XmlElement()
-{
+XmlElement::XmlElement() {
 	parent = NULL;
 }
 
 XmlElement::XmlElement(string name, string contents) : _name(name), _contents(contents), parent(NULL)
 { }
 
-XmlElement::~XmlElement()
-{
-	for(unsigned int i = 0; i < children.size(); i++)
-	{
+XmlElement::XmlElement(const XmlElement *e) {
+	parent = NULL;
+	attributes = e->attributes;
+	name = e->name;
+	contents = e->contents;
+
+	for (unsigned i = 0; i < e->children.size(); i++) {
+		tmpChild = new XmlElement(e->children[i]);
+		tmpChild->parent = this;
+		children.push_back(tmpChild);
+	}
+}
+
+XmlElement::~XmlElement() {
+	for(unsigned int i = 0; i < children.size(); i++) {
 		delete children[i];
 	}
 }
 
-int XmlElement::Depth()
-{
+int XmlElement::Depth() {
 	if(parent == NULL)
 		return 0;
 	else
@@ -35,45 +44,37 @@ void XmlElement::addChild(string name, string contents) {
 	addChild(e);
 }
 
-void XmlElement::addChild(XmlElement *child)
-{
+void XmlElement::addChild(XmlElement *child) {
 	child->parent = this;
 	children.push_back(child);
 }
 
-string XmlElement::Name()
-{
+string XmlElement::Name() {
 	return _name;
 }
 
-void XmlElement::setName(string name)
-{
+void XmlElement::setName(string name) {
 	_name = name;
 }
 
-string XmlElement::Contents()
-{
+string XmlElement::Contents() {
 	return _contents;
 }
 
-void XmlElement::setContents(string contents)
-{
+void XmlElement::setContents(string contents) {
 	_contents = contents;
 }
 
-string XmlElement::ToString()
-{
+string XmlElement::ToString() {
 	return "Jeromy Is Lazy";
 }
 
-void XmlElement::Print(int tabs)
-{
+void XmlElement::Print(int tabs) {
 	for(int i = 0; i < tabs; i++)
 		cout << "\t";
 	cout << "<" << _name << ">\n";
 
-	if(_contents != "")
-	{
+	if(_contents != "") {
 		for(int i = 0; i < tabs+1; i++)
 			cout << "\t";
 		cout << _contents << "\n";
@@ -85,13 +86,11 @@ void XmlElement::Print(int tabs)
 	cout << "</" << _name << ">\n";
 }
 
-XmlElement *XmlElement::getParent()
-{
+XmlElement *XmlElement::getParent() {
 	return parent;
 }
 
-void XmlElement::_save(ofstream &of, int tabs)
-{
+void XmlElement::_save(ofstream &of, int tabs) {
 
 	for(int i = 0; i < tabs; i++)
 		of << "\t";
@@ -113,13 +112,10 @@ void XmlElement::_save(ofstream &of, int tabs)
 	for(int i = 0; i < tabs; i++)
 		of << "\t";
 	of << "</" << _name << ">\n";
-
-
 }
 
 //Unlinks this element from its parent, does not delete it
-void XmlElement::Remove()
-{
+void XmlElement::Remove() {
 	if(parent != NULL)
 	{
 		for(unsigned int i = 0; i < parent->children.size(); i++)
@@ -134,8 +130,7 @@ void XmlElement::Remove()
 	}
 }
 
-XmlElement *XmlElement::Element(string name)
-{
+XmlElement *XmlElement::Element(string name) {
 	for(unsigned int i = 0; i < children.size(); i++)
 	{
 		if(children[i]->_name == name)
@@ -145,14 +140,12 @@ XmlElement *XmlElement::Element(string name)
 }
 
 //Returns all child elements of all elements in this collection
-XmlCollection XmlElement::Children()
-{
+XmlCollection XmlElement::Children() {
 	XmlCollection col(children);
 	return col;
 }
 
-XmlCollection XmlElement::ChildrenOfName(string name)
-{
+XmlCollection XmlElement::ChildrenOfName(string name) {
 	vector<XmlElement*> set;
 	for(unsigned int i = 0; i < children.size(); i++)
 	{

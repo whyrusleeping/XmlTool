@@ -1,21 +1,17 @@
 #include "xmlCollection.h"
 
-XmlCollection::XmlCollection()
-{
+XmlCollection::XmlCollection() {
 
 }
 
-XmlCollection::XmlCollection(vector<XmlElement*> lis)
-{
-	for(unsigned int i = 0; i < lis.size(); i++)
-	{
+XmlCollection::XmlCollection(vector<XmlElement*> lis) {
+	for(unsigned int i = 0; i < lis.size(); i++) {
 		_elems.push_back(lis[i]);
 	}
 	_iter = _elems.begin();
 }
 
-XmlElement *XmlCollection::operator[](const unsigned int i)
-{
+XmlElement *XmlCollection::operator[](const unsigned int i) {
 	if(i >= _elems.size())
 		return NULL;
 	unsigned int ind = 0;
@@ -23,16 +19,14 @@ XmlElement *XmlCollection::operator[](const unsigned int i)
 	return *_iter;
 }
 
-int XmlCollection::size()
-{
+int XmlCollection::size() {
 	return _elems.size();
 }
 
 //Returns the first element with whose name matches the parameter
-XmlElement *XmlCollection::Element(string name)
-{
-	for(list<XmlElement*>::iterator i = _elems.begin(); i != _elems.end(); i++)
-	{
+XmlElement *XmlCollection::Element(string name) {
+	for(list<XmlElement*>::iterator i = _elems.begin();
+			i != _elems.end(); i++) {
 		if((*i)->Name() == name)
 			return *i;
 	}
@@ -40,30 +34,27 @@ XmlElement *XmlCollection::Element(string name)
 }
 
 //
-XmlCollection XmlCollection::Children()
-{
+XmlCollection XmlCollection::Children() {
 	XmlCollection col;
-	for(list<XmlElement*>::iterator i = _elems.begin(); i != _elems.end(); i++)
-	{
+	for(list<XmlElement*>::iterator i = _elems.begin();
+			i != _elems.end(); i++) {
 		col._combine((*i)->Children());
 	}
 	return col;
 }
 
-XmlCollection XmlCollection::ChildrenOfName(string name)
-{
+XmlCollection XmlCollection::ChildrenOfName(string name) {
 	XmlCollection col;
-	for(list<XmlElement*>::iterator i = _elems.begin(); i != _elems.end(); i++)
-	{
+	for(list<XmlElement*>::iterator i = _elems.begin();
+			i != _elems.end(); i++) {
 		col._combine((*i)->ChildrenOfName(name));
 	}
 	return col;
 }
 
-void XmlCollection::_combine(XmlCollection ncol)
-{
-	for(list<XmlElement*>::iterator i = ncol._elems.begin(); i != ncol._elems.end(); i++)
-	{
+void XmlCollection::_combine(XmlCollection ncol) {
+	for(list<XmlElement*>::iterator i = ncol._elems.begin();
+			i != ncol._elems.end(); i++) {
 		_elems.push_back(*i);
 	}
 }

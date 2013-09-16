@@ -1,30 +1,25 @@
 #include "xmlDoc.h"
 
-XmlDocument::XmlDocument()
-{
+XmlDocument::XmlDocument() {
 	_filename = "untitled.xml";
 	root = NULL;
 }
 
-XmlDocument::XmlDocument(string filename)
-{
+XmlDocument::XmlDocument(string filename) {
 	root = NULL;
 	Load(filename);
 }
 
-XmlDocument::~XmlDocument()
-{
+XmlDocument::~XmlDocument() {
 	delete root;
 }
 
-void XmlDocument::Load(string filename)
-{
+void XmlDocument::Load(string filename) {
 	_filename = filename;
 	ifstream inf(filename.c_str());
 	stringstream ss;
 	char c;
-	while(inf.good())
-	{
+	while(inf.good()) {
 		inf >> c;
 		if(c != '\t' && c != '\n')
 		   ss << c;	
@@ -32,16 +27,14 @@ void XmlDocument::Load(string filename)
 	Parse(ss.str());
 }
 
-void XmlDocument::Parse(string xml)
-{
+void XmlDocument::Parse(string xml) {
 	XmlElement *cur = NULL;
 
 	//For reading in temporary text
 	stringstream ss;
 
 	bool intag = false;
-	for(unsigned int i = 0; i < xml.length(); i++)
-	{
+	for(unsigned int i = 0; i < xml.length(); i++) {
 		if(!intag) {
 			if(xml[i] == '<') {
 				if(xml[i+1] == '/') {
@@ -84,18 +77,15 @@ void XmlDocument::Parse(string xml)
 	}
 }
 
-void XmlDocument::print()
-{
-	this->root->Print(0);
+void XmlDocument::print() {
+	root->Print(0);
 }
 
-void XmlDocument::Save()
-{
+void XmlDocument::Save() {
 	Save(_filename);
 }
 
-void XmlDocument::Save(string filename)
-{
+void XmlDocument::Save(string filename) {
 	ofstream of(filename.c_str());
 	root->_save(of, 0);
 }
