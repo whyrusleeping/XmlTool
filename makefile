@@ -3,16 +3,17 @@ CC=g++
 OPTLEVEL=0
 FLAGS=-Wall -Werror -O$(OPTLEVEL) -g
 LIBS=
-LIB_NAME=xmlfun
+LIB_NAME=libxml
+PROG_NAME=xmltest
 OBJDIR=obj
 SRCDIR=src
 BINDIR=bin
 
 SRCS = xmlCollection.cpp \
 	   xmlDoc.cpp \
-	   xmlElement.cpp \
-	   xmlTest.cpp
-	
+	   xmlElement.cpp
+
+TEST_SRC = $(SRCDIR)/xmlTest.cpp
 
 OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
@@ -22,7 +23,14 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 
 all: $(OBJS)
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
-	$(CC) $(FLAGS) $(LIBS) $(OBJS) -o $(BINDIR)/$(LIB_NAME)
+	$(CC) $(FLAGS) $(LIBS) $(OBJS) $(TEST_SRC) -o $(BINDIR)/$(PROG_NAME)
+
+lib: $(OBJS)
+	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
+	rm $(BINDIR)/$(LIB_NAME)
+	ar r $(BINDIR)/$(LIB_NAME) $(OBJS)
+
+
 
 clean:
 	rm -rf $(OBJDIR) $(BINDIR)

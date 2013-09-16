@@ -36,55 +36,49 @@ void XmlDocument::Parse(string xml)
 {
 	XmlElement *cur = NULL;
 
+	//For reading in temporary text
 	stringstream ss;
+
 	bool intag = false;
 	for(unsigned int i = 0; i < xml.length(); i++)
 	{
-		if(!intag)
-		{
-			if(xml[i] == '<')
-			{
-				if(xml[i+1] == '/')
-				{
-					if(cur != NULL)
-					{
+		if(!intag) {
+			if(xml[i] == '<') {
+				if(xml[i+1] == '/') {
+					if(cur != NULL) {
+						//The text we have been reading
+						//is now the content of this tag
 						cur->setContents(ss.str());
+						//Clear the buffer
 						ss.str("");
 						cur = cur->getParent();
 					}
-					for(;i < xml.length() && xml[i] != '>'; i++);
-				}
-				else
-				{
+					//Search for the end of the tag
+					for(;i < xml.length() &&
+							xml[i] != '>'; i++);
+				} else {
 					intag = true;
 				}
-			}
-			else
-			{
+			} else {
 				ss << xml[i];
 			}
-		}	
-		else
-		{
-			if(xml[i] == '>')
-			{
+		} else {
+			//Read in tag opener
+			if(xml[i] == '>') {
 				intag = false;
 				XmlElement *n = new XmlElement(ss.str(), "");
-				if(cur != NULL)
-				{
+				if(cur != NULL) {
 					cur->addChild(n);
 					cur = n;
-				}
-				else
-				{
+				} else {
 					root = n;
 					cur = n;
 				}
 				ss.str("");
-			}
-			else
-			{
+			} else {
+				//Check for attributes
 				ss << xml[i];
+
 			}
 		}
 	}

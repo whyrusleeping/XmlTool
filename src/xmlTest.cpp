@@ -16,6 +16,7 @@ int main()
 	*/
 	XmlDocument *d = new XmlDocument();
 	d->root = new XmlElement("TOP");
+	d->root->setAttribute("fish", "herring");
 	d->root->addChild("next");
 	d->root->addChild("other", "something");
 	d->root->addChild("athing", "whatever");

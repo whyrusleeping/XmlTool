@@ -6,12 +6,14 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
+#include <map>
 #include "xmlCollection.h"
 
 using std::ofstream;
 using std::cout;
 using std::vector;
 using std::string;
+using std::map;
 
 class XmlCollection;
 class XmlDocument;
@@ -38,6 +40,9 @@ class XmlElement
 		string Contents();
 		void setContents(string contents);
 
+		string Attribute(string atrname);
+		void setAttribute(string name, string value);
+		
 		string ToString();
 		void Print(int tabs);
 
@@ -52,5 +57,6 @@ class XmlElement
 		string _contents;
 		XmlElement* parent;
 		vector<XmlElement*> children;
+		map<string,string> attributes;
 };
 #endif

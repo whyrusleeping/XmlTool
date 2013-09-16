@@ -5,7 +5,7 @@ XmlElement::XmlElement()
 	parent = NULL;
 }
 
-XmlElement::XmlElement(string name, string contents="") : _name(name), _contents(contents), parent(NULL)
+XmlElement::XmlElement(string name, string contents) : _name(name), _contents(contents), parent(NULL)
 { }
 
 XmlElement::~XmlElement()
@@ -24,7 +24,7 @@ int XmlElement::Depth()
 		return parent->Depth() + 1;
 }
 
-void XmlElement::addChild(string name, string contents="") {
+void XmlElement::addChild(string name, string contents) {
 	XmlElement *e = new XmlElement(name, contents);
 	if (e == NULL) {
 		//cantalloc();
@@ -95,7 +95,12 @@ void XmlElement::_save(ofstream &of, int tabs)
 
 	for(int i = 0; i < tabs; i++)
 		of << "\t";
-	of << "<" << _name << ">\n";
+	of << "<" << _name;
+	for(map<string,string>::iterator i = attributes.begin();
+			i != attributes.end(); i++) {
+		of << " " << (*i).first << "=\"" << (*i).second << "\"";
+	}
+	of << ">\n";
 
 	if(_contents != "")
 	{
@@ -158,4 +163,12 @@ XmlCollection XmlElement::ChildrenOfName(string name)
 	}
 	XmlCollection col(set);
 	return col;
+}
+
+string XmlElement::Attribute(string atrname) {
+	return attributes[atrname];
+}
+
+void XmlElement::setAttribute(string name, string value) {
+	attributes[name] = value;
 }
