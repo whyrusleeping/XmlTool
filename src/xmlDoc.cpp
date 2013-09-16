@@ -38,8 +38,7 @@ void XmlDocument::Parse(string xml)
 
 	stringstream ss;
 	bool intag = false;
-	bool endtag = false;
-	for(int i = 0; i < xml.length(); i++)
+	for(unsigned int i = 0; i < xml.length(); i++)
 	{
 		if(!intag)
 		{

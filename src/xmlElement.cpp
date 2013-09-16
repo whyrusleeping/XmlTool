@@ -5,16 +5,12 @@ XmlElement::XmlElement()
 	parent = NULL;
 }
 
-XmlElement::XmlElement(string name, string contents)
-{
-	_name = name;
-	_contents = contents;
-	parent = NULL;
-}
+XmlElement::XmlElement(string name, string contents="") : _name(name), _contents(contents), parent(NULL)
+{ }
 
 XmlElement::~XmlElement()
 {
-	for(int i = 0; i < children.size(); i++)
+	for(unsigned int i = 0; i < children.size(); i++)
 	{
 		delete children[i];
 	}
@@ -26,6 +22,17 @@ int XmlElement::Depth()
 		return 0;
 	else
 		return parent->Depth() + 1;
+}
+
+void XmlElement::addChild(string name, string contents="") {
+	XmlElement *e = new XmlElement(name, contents);
+	if (e == NULL) {
+		//cantalloc();
+		cout << "Failed to allocate memory!\n";
+		exit(1);
+	}
+
+	addChild(e);
 }
 
 void XmlElement::addChild(XmlElement *child)
@@ -71,7 +78,7 @@ void XmlElement::Print(int tabs)
 			cout << "\t";
 		cout << _contents << "\n";
 	}
-	for(int i = 0; i < children.size(); i++)
+	for(unsigned int i = 0; i < children.size(); i++)
 		children[i]->Print(tabs + 1);
 	for(int i = 0; i < tabs; i++)
 		cout << "\t";
@@ -96,7 +103,7 @@ void XmlElement::_save(ofstream &of, int tabs)
 			of << "\t";
 		of << _contents << "\n";
 	}
-	for(int i = 0; i < children.size(); i++)
+	for(unsigned int i = 0; i < children.size(); i++)
 		children[i]->_save(of, tabs + 1);
 	for(int i = 0; i < tabs; i++)
 		of << "\t";
@@ -110,7 +117,7 @@ void XmlElement::Remove()
 {
 	if(parent != NULL)
 	{
-		for(int i = 0; i < parent->children.size(); i++)
+		for(unsigned int i = 0; i < parent->children.size(); i++)
 		{
 			if(parent->children[i] == this)
 			{
@@ -124,11 +131,12 @@ void XmlElement::Remove()
 
 XmlElement *XmlElement::Element(string name)
 {
-	for(int i = 0; i < children.size(); i++)
+	for(unsigned int i = 0; i < children.size(); i++)
 	{
 		if(children[i]->_name == name)
 			return children[i];
 	}
+	return NULL;
 }
 
 //Returns all child elements of all elements in this collection
@@ -141,7 +149,7 @@ XmlCollection XmlElement::Children()
 XmlCollection XmlElement::ChildrenOfName(string name)
 {
 	vector<XmlElement*> set;
-	for(int i = 0; i < children.size(); i++)
+	for(unsigned int i = 0; i < children.size(); i++)
 	{
 		if(children[i]->_name == name)
 		{

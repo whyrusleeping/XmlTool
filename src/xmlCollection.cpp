@@ -7,18 +7,18 @@ XmlCollection::XmlCollection()
 
 XmlCollection::XmlCollection(vector<XmlElement*> lis)
 {
-	for(int i = 0; i < lis.size(); i++)
+	for(unsigned int i = 0; i < lis.size(); i++)
 	{
 		_elems.push_back(lis[i]);
 	}
 	_iter = _elems.begin();
 }
 
-XmlElement *XmlCollection::operator[](const int i)
+XmlElement *XmlCollection::operator[](const unsigned int i)
 {
 	if(i >= _elems.size())
 		return NULL;
-	int ind = 0;
+	unsigned int ind = 0;
 	for(_iter = _elems.begin(); _iter != _elems.end() && ind < i; _iter++, ind++);		
 	return *_iter;
 }

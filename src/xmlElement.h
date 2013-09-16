@@ -5,6 +5,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <cstdlib>
 #include "xmlCollection.h"
 
 using std::ofstream;
@@ -20,7 +21,7 @@ class XmlElement
 	public:
 		friend XmlDocument;
 		XmlElement();
-		XmlElement(string name, string contents);
+		XmlElement(string name, string contents="");
 		~XmlElement();
 
 
@@ -43,6 +44,7 @@ class XmlElement
 		XmlElement *getParent();
 
 		void addChild(XmlElement *child);
+		void addChild(string name, string contents="");
 		void Remove();
 	private:
 		void _save(ofstream &of, int tabs);

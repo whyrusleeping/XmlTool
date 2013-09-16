@@ -16,7 +16,7 @@ class XmlCollection
 	public: 
 		XmlCollection();
 		XmlCollection(vector<XmlElement*> lis);
-		XmlElement *operator[] (const int i);
+		XmlElement *operator[] (const unsigned int i);
 		int size();
 
 		//Accessors

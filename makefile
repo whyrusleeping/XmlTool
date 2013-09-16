@@ -1,15 +1,28 @@
-LIBNAME=libcppxml.so
+#one makefile to rule them all
+CC=g++
+OPTLEVEL=0
+FLAGS=-Wall -Werror -O$(OPTLEVEL) -g
+LIBS=
+LIB_NAME=xmlfun
+OBJDIR=obj
+SRCDIR=src
+BINDIR=bin
 
-all: compLib
+SRCS = xmlCollection.cpp \
+	   xmlDoc.cpp \
+	   xmlElement.cpp \
+	   xmlTest.cpp
+	
 
-example:
-	g++ xmlTest.cpp -o xmlTest -l:libcppxml.so
+OBJS = $(addprefix $(OBJDIR)/, $(SRCS:.cpp=.o))
 
-srcFiles: xmlDoc.cpp xmlElement.cpp xmlCollection.cpp
-	g++ -c -fPIC xmlDoc.cpp xmlElement.cpp xmlCollection.cpp
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
+	@if [ ! -d $(OBJDIR) ]; then mkdir -p $(OBJDIR); fi
+	$(CC) $(FLAGS) -c -o $@ $<
 
-compLib: srcFiles
-	g++ -shared -o $(LIBNAME) xmlDoc.o xmlElement.o xmlCollection.o
+all: $(OBJS)
+	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
+	$(CC) $(FLAGS) $(LIBS) $(OBJS) -o $(BINDIR)/$(LIB_NAME)
 
 clean:
-	rm *.o
+	rm -rf $(OBJDIR) $(BINDIR)
