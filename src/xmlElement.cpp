@@ -4,25 +4,25 @@ XmlElement::XmlElement() {
 	parent = NULL;
 }
 
-XmlElement::XmlElement(string name, string contents) : _name(name), _contents(contents), parent(NULL)
+XmlElement::XmlElement(string name, string contents) : _name(name), _contents(contents), parent(NULL), children(new XmlCollection())
 { }
 
 XmlElement::XmlElement(const XmlElement *e) {
 	parent = NULL;
 	attributes = e->attributes;
-	name = e->name;
-	contents = e->contents;
+	_name = e->_name;
+	_contents = e->_contents;
 
-	for (unsigned i = 0; i < e->children.size(); i++) {
-		tmpChild = new XmlElement(e->children[i]);
+	for (unsigned i = 0; i < e->children->size(); i++) {
+		XmlElement *tmpChild = new XmlElement(e->children->at(i));
 		tmpChild->parent = this;
-		children.push_back(tmpChild);
+		children->Add(tmpChild);
 	}
 }
 
 XmlElement::~XmlElement() {
-	for(unsigned int i = 0; i < children.size(); i++) {
-		delete children[i];
+	for(size_t i = 0; i < children->size(); i++) {
+		delete children->at(i);
 	}
 }
 
@@ -46,7 +46,7 @@ void XmlElement::addChild(string name, string contents) {
 
 void XmlElement::addChild(XmlElement *child) {
 	child->parent = this;
-	children.push_back(child);
+	children->Add(child);
 }
 
 string XmlElement::Name() {
@@ -70,19 +70,17 @@ string XmlElement::ToString() {
 }
 
 void XmlElement::Print(int tabs) {
-	for(int i = 0; i < tabs; i++)
-		cout << "\t";
+	for(int i = 0; i < tabs; i++) cout << "\t";
 	cout << "<" << _name << ">\n";
 
-	if(_contents != "") {
-		for(int i = 0; i < tabs+1; i++)
-			cout << "\t";
+	if(_contents.length() > 0) {
+		for(int i = 0; i < tabs+1; i++) cout << "\t";
 		cout << _contents << "\n";
 	}
-	for(unsigned int i = 0; i < children.size(); i++)
-		children[i]->Print(tabs + 1);
-	for(int i = 0; i < tabs; i++)
-		cout << "\t";
+	for(size_t i = 0; i < children->size(); i++) {
+		children->at(i)->Print(tabs + 1);
+	}
+	for(int i = 0; i < tabs; i++) cout << "\t";
 	cout << "</" << _name << ">\n";
 }
 
@@ -91,7 +89,6 @@ XmlElement *XmlElement::getParent() {
 }
 
 void XmlElement::_save(ofstream &of, int tabs) {
-
 	for(int i = 0; i < tabs; i++)
 		of << "\t";
 	of << "<" << _name;
@@ -107,8 +104,8 @@ void XmlElement::_save(ofstream &of, int tabs) {
 			of << "\t";
 		of << _contents << "\n";
 	}
-	for(unsigned int i = 0; i < children.size(); i++)
-		children[i]->_save(of, tabs + 1);
+	for(size_t i = 0; i < children->size(); i++)
+		children->at(i)->_save(of, tabs + 1);
 	for(int i = 0; i < tabs; i++)
 		of << "\t";
 	of << "</" << _name << ">\n";
@@ -118,11 +115,11 @@ void XmlElement::_save(ofstream &of, int tabs) {
 void XmlElement::Remove() {
 	if(parent != NULL)
 	{
-		for(unsigned int i = 0; i < parent->children.size(); i++)
+		for(size_t i = 0; i < parent->children->size(); i++)
 		{
-			if(parent->children[i] == this)
+			if(parent->children->at(i) == this)
 			{
-				parent->children.erase(parent->children.begin() + i);
+				parent->children->Remove(i);
 				break;
 			}
 		}
@@ -131,30 +128,29 @@ void XmlElement::Remove() {
 }
 
 XmlElement *XmlElement::Element(string name) {
-	for(unsigned int i = 0; i < children.size(); i++)
+	for(size_t i = 0; i < children->size(); i++)
 	{
-		if(children[i]->_name == name)
-			return children[i];
+		if(children->at(i)->_name == name)
+			return children->at(i);
 	}
 	return NULL;
 }
 
 //Returns all child elements of all elements in this collection
-XmlCollection XmlElement::Children() {
-	XmlCollection col(children);
-	return col;
+XmlCollection *XmlElement::Children() {
+	return children;
 }
 
-XmlCollection XmlElement::ChildrenOfName(string name) {
+XmlCollection *XmlElement::ChildrenOfName(string name) {
 	vector<XmlElement*> set;
-	for(unsigned int i = 0; i < children.size(); i++)
+	for(size_t i = 0; i < children->size(); i++)
 	{
-		if(children[i]->_name == name)
+		if(children->at(i)->_name == name)
 		{
-			set.push_back(children[i]);
+			set.push_back(children->at(i));
 		}
 	}
-	XmlCollection col(set);
+	XmlCollection *col = new XmlCollection(set);
 	return col;
 }
 

@@ -2,6 +2,7 @@
 #define XML_DOC_H
 
 #include "xmlElement.h"
+#include "xmlParser.h"
 #include <sstream>
 
 using std::ifstream;
@@ -18,7 +19,6 @@ class XmlDocument
 		void Load(string filename);
 		void Save();
 		void Save(string filename);
-		void Parse(string xml);
 
 		XmlElement *root;
 		void print();

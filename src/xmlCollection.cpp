@@ -11,7 +11,11 @@ XmlCollection::XmlCollection(vector<XmlElement*> lis) {
 	_iter = _elems.begin();
 }
 
-XmlElement *XmlCollection::operator[](const unsigned int i) {
+XmlElement *XmlCollection::operator[](size_t i) {
+	return at(i);
+}
+
+XmlElement *XmlCollection::at(size_t i) {
 	if(i >= _elems.size())
 		return NULL;
 	unsigned int ind = 0;
@@ -19,7 +23,7 @@ XmlElement *XmlCollection::operator[](const unsigned int i) {
 	return *_iter;
 }
 
-int XmlCollection::size() {
+size_t XmlCollection::size() {
 	return _elems.size();
 }
 
@@ -52,9 +56,18 @@ XmlCollection XmlCollection::ChildrenOfName(string name) {
 	return col;
 }
 
-void XmlCollection::_combine(XmlCollection ncol) {
-	for(list<XmlElement*>::iterator i = ncol._elems.begin();
-			i != ncol._elems.end(); i++) {
+void XmlCollection::_combine(XmlCollection *ncol) {
+	for(list<XmlElement*>::iterator i = ncol->_elems.begin();
+			i != ncol->_elems.end(); i++) {
 		_elems.push_back(*i);
 	}
+}
+
+void XmlCollection::Add(XmlElement *e) {
+	_elems.push_back(e);
+}
+
+void XmlCollection::Remove(int i) {
+	_elems.erase(_elems.begin().operator++(i));
+	_iter = _elems.begin();
 }

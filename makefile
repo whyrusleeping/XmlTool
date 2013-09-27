@@ -11,7 +11,8 @@ BINDIR=bin
 
 SRCS = xmlCollection.cpp \
 	   xmlDoc.cpp \
-	   xmlElement.cpp
+	   xmlElement.cpp \
+	   xmlParser.cpp
 
 TEST_SRC = $(SRCDIR)/xmlTest.cpp
 

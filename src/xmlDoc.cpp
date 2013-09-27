@@ -20,61 +20,11 @@ void XmlDocument::Load(string filename) {
 	stringstream ss;
 	char c;
 	while(inf.good()) {
-		inf >> c;
+		c = inf.get();
 		if(c != '\t' && c != '\n')
 		   ss << c;	
 	}
-	Parse(ss.str());
-}
-
-void XmlDocument::Parse(string xml) {
-	XmlElement *cur = NULL;
-
-	//For reading in temporary text
-	stringstream ss;
-
-	bool intag = false;
-	for(unsigned int i = 0; i < xml.length(); i++) {
-		if(!intag) {
-			if(xml[i] == '<') {
-				if(xml[i+1] == '/') {
-					if(cur != NULL) {
-						//The text we have been reading
-						//is now the content of this tag
-						cur->setContents(ss.str());
-						//Clear the buffer
-						ss.str("");
-						cur = cur->getParent();
-					}
-					//Search for the end of the tag
-					for(;i < xml.length() &&
-							xml[i] != '>'; i++);
-				} else {
-					intag = true;
-				}
-			} else {
-				ss << xml[i];
-			}
-		} else {
-			//Read in tag opener
-			if(xml[i] == '>') {
-				intag = false;
-				XmlElement *n = new XmlElement(ss.str(), "");
-				if(cur != NULL) {
-					cur->addChild(n);
-					cur = n;
-				} else {
-					root = n;
-					cur = n;
-				}
-				ss.str("");
-			} else {
-				//Check for attributes
-				ss << xml[i];
-
-			}
-		}
-	}
+	root = XmlParser::Parse(ss.str());
 }
 
 void XmlDocument::print() {

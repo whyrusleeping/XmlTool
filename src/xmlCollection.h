@@ -16,15 +16,20 @@ class XmlCollection
 	public: 
 		XmlCollection();
 		XmlCollection(vector<XmlElement*> lis);
-		XmlElement *operator[] (const unsigned int i);
-		int size();
+		XmlElement *operator[] (size_t i);
+		XmlElement *at(size_t i);
+		size_t size();
+
+		void Add(XmlElement *e);
+		void Remove(int i);
+		void Remove(XmlElement *e);
 
 		//Accessors
 		XmlElement *Element(string name);
 		XmlCollection Children();
 		XmlCollection ChildrenOfName(string name);
 	private:
-		void _combine(XmlCollection ncol);
+		void _combine(XmlCollection *ncol);
 
 		list<XmlElement*>::iterator _iter;
 		list<XmlElement*> _elems;

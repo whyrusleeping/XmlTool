@@ -27,11 +27,12 @@ class XmlElement
 		XmlElement(const XmlElement *e);
 		~XmlElement();
 
+		static XmlElement *Parse(string xml);
 
 		//Accessors
 		XmlElement *Element(string name);
-		XmlCollection Children();
-		XmlCollection ChildrenOfName(string name);
+		XmlCollection *Children();
+		XmlCollection *ChildrenOfName(string name);
 
 
 		int Depth();
@@ -57,7 +58,8 @@ class XmlElement
 		string _name;
 		string _contents;
 		XmlElement* parent;
-		vector<XmlElement*> children;
+
+		XmlCollection *children;
 		map<string,string> attributes;
 };
 #endif
