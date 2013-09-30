@@ -17,6 +17,10 @@ XmlDocument::~XmlDocument() {
 void XmlDocument::Load(string filename) {
 	_filename = filename;
 	ifstream inf(filename.c_str());
+	if (!inf.good()) {
+		cout << "Could not open file " << filename << std::endl;
+		return;
+	}
 	stringstream ss;
 	char c;
 	while(inf.good()) {
