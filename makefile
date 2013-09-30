@@ -28,7 +28,7 @@ all: $(OBJS)
 
 lib: $(OBJS)
 	@if [ ! -d $(BINDIR) ]; then mkdir -p $(BINDIR); fi
-	rm $(BINDIR)/$(LIB_NAME)
+	rm -f $(BINDIR)/$(LIB_NAME)
 	ar r $(BINDIR)/$(LIB_NAME) $(OBJS)
 
 
